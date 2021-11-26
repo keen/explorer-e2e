@@ -1,0 +1,64 @@
+{
+  "name": "explorer-e2e",
+  "version": "1.0.0",
+  "description": "Explorer e2e tests by Keen IO",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "e2e": "cypress run",
+    "e2e:open": "cypress open",
+    "prettier": "prettier --write '{src,cypress}/**/*.{js,ts,tsx,json}'",
+    "release": "standard-version",
+    "commit": "npx git-cz"
+  },
+  "bugs": "https://github.com/keen/explorer-e2e/issues",
+  "author": "Keen IO <team@keen.io> (https://keen.io/)",
+  "homepage": "https://keen.io",
+  "keywords": [
+    "Keen.io",
+    "explorer e2e"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "@cypress/webpack-preprocessor": "^5.9.0",
+    "@commitlint/cli": "^9.1.1",
+    "@commitlint/config-conventional": "^9.1.1",
+    "@types/cypress-cucumber-preprocessor": "^4.0.0",
+    "commitizen": "^4.0.3",
+    "cypress": "^9.1.0",
+    "cypress-cucumber-preprocessor": "^4.1.1",
+    "cypress-wait-until": "^1.7.1",
+    "node-polyfill-webpack-plugin": "^1.1.2",
+    "webpack": "^5.37.1",
+    "ts-loader": "^8.3.0",
+    "typescript": "^3.9.3",
+    "prettier": "^2.5.0",
+    "husky": "^4.2.5",
+    "standard-version": "^7.0.1",
+    "git-cz": "^3.3.0",
+    "cz-conventional-changelog": "^3.0.2"
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "yarn prettier",
+      "git add *"
+    ]
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "cypress-cucumber-preprocessor": {
+    "stepDefinitions": "cypress/integration",
+    "nonGlobalStepDefinitions": false
+  }
+}

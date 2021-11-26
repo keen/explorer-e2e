@@ -1,0 +1,15 @@
+*.log
+
+.awspublish-keen-js
+.DS_Store
+
+node_modules
+videos
+coverage
+config.js
+.idea/
+package-lock.json
+.npmrc
+
+.yarn/cache
+.yarn/install-state.gz
