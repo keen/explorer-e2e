@@ -1,0 +1,52 @@
+version: 2.1
+
+executors:
+  cypress:
+    docker:
+      - image: cypress/base:12
+
+jobs:
+  run_e2e_tests:
+    executor: cypress
+    working_directory: ~/tmp
+    steps:
+      - checkout
+      - restore_cache:
+          key: npm-deps-v1-{{ arch }}-{{ .Branch }}-{{ checksum "yarn.lock" }}
+      - run:
+          name: Install dependencies
+          command: yarn install
+      - save_cache:
+          key: npm-deps-v1-{{ arch }}-{{ .Branch }}-{{ checksum "yarn.lock" }}
+          paths:
+            - ./node_modules
+      - run:
+          name: Create project config
+          command: echo $KEEN_PROJECT_CONFIG > config.js
+      - run:
+          name: Start application
+          command: yarn start
+          background: true
+      - run:
+          name: Run tests
+          command: |
+            sleep 15
+            yarn e2e
+      - store_artifacts:
+          path: cypress/screenshots
+
+workflows:
+  version: 2
+  commit-workflow:
+    jobs:
+      - run_e2e_tests
+  schedule-workflow:
+    triggers:
+      - schedule:
+          cron: "0 * * * *"
+          filters:
+            branches:
+              only:
+                - main
+    jobs:
+      - run_e2e_tests
