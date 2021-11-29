@@ -9,7 +9,7 @@ import {
 Before(() => {
   cy.intercept(
     'GET',
-    'https://api.keen.io/3.0/projects/*/queries/saved?api_key=*&analysis_type=saved',
+    'https://staging-api.keen.io/3.0/projects/*/queries/saved?api_key=*&analysis_type=saved',
     {
       statusCode: 200,
       fixture: 'savedQueries.json',
@@ -18,7 +18,7 @@ Before(() => {
 });
 
 Given(`I open a Data Explorer application`, () => {
-  cy.visit(`${Cypress.env('host')}`);
+  cy.visit(`${Cypress.env('HOST')}`);
 });
 
 When(`I click on toggle`, () => {

@@ -1,7 +1,7 @@
 import { Given, When, And, Then } from 'cypress-cucumber-preprocessor/steps';
 
 Given(`I open a Data Explorer application in editor view`, () => {
-  cy.visit(`${Cypress.env('host')}`);
+  cy.visit(`${Cypress.env('HOST')}`);
   cy.contains('New Query').click();
 });
 

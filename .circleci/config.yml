@@ -1,0 +1,200 @@
+version: 2.1
+parameters:
+  environment:
+    type: enum
+    enum: ['TEST', 'UAT']
+    default: "TEST"
+
+orbs:
+  slack: circleci/slack@4.5.0
+
+executors:
+  cypress:
+    docker:
+      - image: cypress/base:12
+
+jobs:
+  run_e2e_tests:
+    executor: cypress
+    working_directory: ~/tmp
+    environment:
+      EXECUTION_ENVIRONMENT: << pipeline.parameters.environment >>
+    steps:
+      - checkout
+      - slack/notify:
+          channel: 'front-end-e2e'
+          custom: |
+            {
+              "blocks": [
+            		{
+            			"type": "header",
+            			"text": {
+            				"type": "plain_text",
+            				"text": "Running test suite :test_tube:",
+            				"emoji": true
+            			}
+            		},
+                {
+              		"type": "section",
+            			"fields": [
+            				{
+            					"type": "mrkdwn",
+            					"text": "*Start*: $(date +'%m/%d/%Y %T')"
+            				},
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Application*: Data Explorer"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Build*: ${CIRCLE_BUILD_NUM}"
+                    },
+            				{
+            					"type": "mrkdwn",
+            					"text": "*Environment*: ${EXECUTION_ENVIRONMENT}"
+            				}
+            			]
+              	},
+                {
+            			"type": "actions",
+            			"elements": [
+            				{
+            					"type": "button",
+            					"text": {
+            						"type": "plain_text",
+            						"text": "View Job"
+            					},
+            					"url": "${CIRCLE_BUILD_URL}"
+            				}
+            			]
+                }
+              ]
+            }
+          event: always
+      - restore_cache:
+          key: npm-deps-v1-{{ arch }}-{{ .Branch }}-{{ checksum "yarn.lock" }}
+      - run:
+          name: Install dependencies
+          command: yarn install
+      - save_cache:
+          key: npm-deps-v1-{{ arch }}-{{ .Branch }}-{{ checksum "yarn.lock" }}
+          paths:
+            - ./node_modules
+      - run:
+          name: Run tests
+          command: |
+            if [ "$EXECUTION_ENVIRONMENT" = "TEST" ]; then
+              export CYPRESS_HOST=${HOST_TEST} && yarn e2e
+            elif [ "$EXECUTION_ENVIRONMENT" = "UAT" ]; then
+              export CYPRESS_HOST=${HOST_UAT} && yarn e2e
+            fi
+      - store_artifacts:
+          path: cypress/screenshots
+      - slack/notify:
+          channel: 'front-end-e2e'
+          custom: |
+            {
+              "blocks": [
+            		{
+            			"type": "header",
+            			"text": {
+            				"type": "plain_text",
+            				"text": "Tests failed :aniboom:",
+            				"emoji": true
+            			}
+            		},
+                {
+              		"type": "section",
+            			"fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Application*: Data Explorer"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Build*: ${CIRCLE_BUILD_NUM}"
+                    },
+            				{
+            					"type": "mrkdwn",
+            					"text": "*Environment*: ${EXECUTION_ENVIRONMENT}"
+            				}
+            			]
+              	},
+                {
+            			"type": "actions",
+            			"elements": [
+            				{
+            					"type": "button",
+            					"text": {
+            						"type": "plain_text",
+            						"text": "View Job"
+            					},
+            					"url": "${CIRCLE_BUILD_URL}"
+            				}
+            			]
+                }
+              ]
+            }
+          event: fail
+      - slack/notify:
+          channel: 'front-end-e2e'
+          custom: |
+            {
+              "blocks": [
+            		{
+            			"type": "header",
+            			"text": {
+            				"type": "plain_text",
+            				"text": "All tests passed successfully :white_check_mark:",
+            				"emoji": true
+            			}
+            		},
+                {
+              		"type": "section",
+            			"fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Build*: ${CIRCLE_BUILD_NUM}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Application*: Data Explorer"
+                    },
+            				{
+            					"type": "mrkdwn",
+            					"text": "*Environment*: ${EXECUTION_ENVIRONMENT}"
+            				}
+            			]
+              	},
+                {
+            			"type": "actions",
+            			"elements": [
+            				{
+            					"type": "button",
+            					"text": {
+            						"type": "plain_text",
+            						"text": "View Job"
+            					},
+            					"url": "${CIRCLE_BUILD_URL}"
+            				}
+            			]
+                }
+              ]
+            }
+          event: pass
+
+workflows:
+  version: 2
+  commit-workflow:
+    jobs:
+      - run_e2e_tests
+  schedule-workflow:
+    triggers:
+      - schedule:
+          cron: "0 * * * *"
+          filters:
+            branches:
+              only:
+                - master
+    jobs:
+      - run_e2e_tests

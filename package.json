@@ -22,35 +22,28 @@
     "access": "public"
   },
   "devDependencies": {
-    "@cypress/webpack-preprocessor": "^5.9.0",
     "@commitlint/cli": "^9.1.1",
     "@commitlint/config-conventional": "^9.1.1",
+    "@cypress/webpack-preprocessor": "^5.9.0",
     "@types/cypress-cucumber-preprocessor": "^4.0.0",
     "commitizen": "^4.0.3",
     "cypress": "^9.1.0",
     "cypress-cucumber-preprocessor": "^4.1.1",
     "cypress-wait-until": "^1.7.1",
+    "cz-conventional-changelog": "^3.0.2",
+    "git-cz": "^3.3.0",
+    "husky": "^4.2.5",
     "node-polyfill-webpack-plugin": "^1.1.2",
-    "webpack": "^5.37.1",
+    "prettier": "^2.5.0",
+    "standard-version": "^7.0.1",
     "ts-loader": "^8.3.0",
     "typescript": "^3.9.3",
-    "prettier": "^2.5.0",
-    "husky": "^4.2.5",
-    "standard-version": "^7.0.1",
-    "git-cz": "^3.3.0",
-    "cz-conventional-changelog": "^3.0.2"
+    "webpack": "^5.37.1"
   },
   "husky": {
     "hooks": {
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
-      "pre-commit": "lint-staged"
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
     }
-  },
-  "lint-staged": {
-    "*.{ts,tsx}": [
-      "yarn prettier",
-      "git add *"
-    ]
   },
   "config": {
     "commitizen": {
