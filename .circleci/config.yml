@@ -49,6 +49,10 @@ jobs:
                       "type": "mrkdwn",
                       "text": "*Build*: ${CIRCLE_BUILD_NUM}"
                     },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Workflow*: ${CIRCLE_WORKFLOW_ID}"
+                    },
             				{
             					"type": "mrkdwn",
             					"text": "*Environment*: ${EXECUTION_ENVIRONMENT}"
