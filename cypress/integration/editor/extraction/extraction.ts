@@ -7,19 +7,19 @@ import {
 } from 'cypress-cucumber-preprocessor/steps';
 
 Before(() => {
-  cy.intercept('GET', 'https://api.keen.io/3.0/projects/*?api_key=*', {
+  cy.intercept('GET', 'https://staging-api.keen.io/3.0/projects/*?api_key=*', {
     statusCode: 200,
     fixture: 'project.json',
   }).as('project data');
 
-  cy.intercept('GET', 'https://api.keen.io/3.0/projects/*/events/*?api_key=*', {
+  cy.intercept('GET', 'https://staging-api.keen.io/3.0/projects/*/events/*?api_key=*', {
     statusCode: 200,
     fixture: 'schema.json',
   }).as('schema');
 });
 
 Given(`I open a Data Explorer application in editor view`, () => {
-  cy.visit(`${Cypress.env('host')}`);
+  cy.visit(`${Cypress.env('HOST')}`);
   cy.contains('New Query').click();
 });
 
