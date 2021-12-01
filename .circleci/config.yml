@@ -55,7 +55,7 @@ jobs:
                     },
                     {
                       "type": "mrkdwn",
-                      "text": "*Execution*: << parameters.bucket_name >>"
+                      "text": "*Execution*: << parameters.execution_context >>"
                     },
             				{
             					"type": "mrkdwn",
