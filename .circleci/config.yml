@@ -17,6 +17,10 @@ jobs:
   run_e2e_tests:
     executor: cypress
     working_directory: ~/tmp
+    parameters:
+      execution_context:
+        type: string
+        default: manual
     environment:
       EXECUTION_ENVIRONMENT: << pipeline.parameters.environment >>
     steps:
@@ -51,7 +55,7 @@ jobs:
                     },
                     {
                       "type": "mrkdwn",
-                      "text": "*Workflow*: ${CIRCLE_WORKFLOW_ID}"
+                      "text": "*Execution*: << parameters.bucket_name >>"
                     },
             				{
             					"type": "mrkdwn",
@@ -201,4 +205,5 @@ workflows:
               only:
                 - master
     jobs:
-      - run_e2e_tests
+      - run_e2e_tests:
+          execution_context: automatic schedule
