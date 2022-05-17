@@ -33,8 +33,8 @@ And(`Select Event stream`, () => {
   cy.contains('event_stream').click();
 });
 
-When(`I click on "Preview Events" button`, () => {
-  cy.contains('Preview Events').click();
+When(`I click on "Run Query" button`, () => {
+  cy.contains('button', 'Run Query').click();
 });
 
 Then(`Modal for "Large amount of properties" appears`, () => {
@@ -53,8 +53,8 @@ When(`I add more properties than limit to extract`, () => {
   );
 });
 
-And(`Click on "Preview Events" button`, () => {
-  cy.contains('Preview Events').click();
+And(`Click on "Run Query" button`, () => {
+  cy.contains('button', 'Run Query').click();
 });
 
 Then(`Modal for "Large amount of properties" appears`, () => {
@@ -69,8 +69,8 @@ When(`I add less properties than limit to extract`, () => {
   cy.addExtractionProperty('active');
 });
 
-And(`Click on "Preview Events" button`, () => {
-  cy.contains('Preview Events').click();
+And(`Click on "Run Query" button`, () => {
+  cy.contains('button', 'Run Query').click();
 });
 
 Then(`Modal for "Large amount of properties" does not appear`, () => {
