@@ -196,14 +196,3 @@ workflows:
   commit-workflow:
     jobs:
       - run_e2e_tests
-  schedule-workflow:
-    triggers:
-      - schedule:
-          cron: "0 * * * *"
-          filters:
-            branches:
-              only:
-                - master
-    jobs:
-      - run_e2e_tests:
-          execution_context: automatic schedule
